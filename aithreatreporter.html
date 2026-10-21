@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Aegis AI Threat Reporter | Nethra Karthik</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Hanken+Grotesk:wght@400;500;600;700&family=Libre+Baskerville:wght@400;700&display=swap">
+<style>
+:root{--blush:#FFDBDB;--pastel:#FDC3D1;--baby:#FDA8BF;--tint:#FB8CAC;--pink:#FF5C89;--paper:#FFF3F2;--ink:#2B0F1C;--ink-soft:#6B3A4D;
+--f-display:'Anton','Impact','Arial Narrow',sans-serif;--f-body:'Hanken Grotesk','Helvetica Neue',Arial,sans-serif;--f-serif:'Libre Baskerville',Georgia,serif;color-scheme:light}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;font-family:var(--f-body);font-size:16px;color:var(--ink);background:linear-gradient(180deg,var(--paper),var(--blush) 55%,var(--pastel));min-height:100vh;line-height:1.5}
+.wrap{max-width:1100px;margin:0 auto;padding:0 clamp(16px,4vw,32px)}
+.top{display:flex;justify-content:space-between;align-items:center;padding:22px 0}
+.back{font-weight:700;color:var(--ink);text-decoration:none;padding:10px 18px;border-radius:999px;background:var(--pastel);transition:transform .2s}
+.back:hover{transform:translateX(-3px)}
+.lbl{display:inline-block;padding:8px 16px;background:#EBC6DD;font-family:var(--f-serif);font-size:1rem;border-left:2px solid #C93C7D}
+h1,h2{font-family:var(--f-display);font-weight:400;text-transform:uppercase;margin:0;line-height:.95}
+h1{font-size:clamp(3rem,9vw,7rem);margin:18px 0 20px}
+h2{font-size:clamp(2.2rem,5vw,3.6rem);margin-bottom:14px}
+.lead{font-size:clamp(1.1rem,2vw,1.4rem);max-width:46ch;margin:0 0 24px}
+.eyebrow{font-weight:700;font-size:1.1rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-soft);margin:0 0 10px}
+.pills{display:flex;flex-wrap:wrap;gap:12px;list-style:none;padding:0;margin:0 0 8px}
+.pill{display:inline-block;padding:10px 18px;border-radius:999px;background:#F5B4CC;font-family:var(--f-serif);font-size:.85rem;text-transform:uppercase;color:var(--ink);text-decoration:none;transition:transform .2s,background .2s}
+a.pill{font-size:1rem;background:var(--ink);color:var(--paper)}
+a.pill:hover{transform:translateY(-3px) rotate(-1deg);background:var(--pink)}
+section{padding:clamp(40px,7vw,80px) 0}
+.tapes{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:22px;margin-top:26px}
+.tape{padding:22px 24px;min-height:120px;background:repeating-linear-gradient(135deg,rgba(255,255,255,.12) 0 3px,transparent 3px 7px),#F5B4CC;
+clip-path:polygon(7px 0,calc(100% - 7px) 0,100% 10%,calc(100% - 7px) 20%,100% 30%,calc(100% - 7px) 40%,100% 50%,calc(100% - 7px) 60%,100% 70%,calc(100% - 7px) 80%,100% 90%,calc(100% - 7px) 100%,0 90%,7px 80%,0 70%,7px 60%,0 50%,7px 40%,0 30%,7px 20%,0 10%,7px 0);transform:rotate(-1deg);transition:transform .25s}
+.tape:nth-child(even){transform:rotate(1deg)}
+.tape:hover{transform:rotate(0) translateY(-4px)}
+.tape b{display:block;font-family:var(--f-serif);font-size:1.05rem;margin-bottom:6px}
+.tape span{font-size:.95rem}
+.chips{display:flex;flex-wrap:wrap;gap:10px;margin:18px 0}
+.chip{border:1.5px solid var(--ink);background:transparent;color:var(--ink);border-radius:999px;padding:9px 16px;font:700 .85rem var(--f-body);letter-spacing:.06em;text-transform:uppercase;cursor:pointer;transition:background .2s,color .2s}
+.chip:hover{background:var(--pastel)}
+.chip[aria-pressed=true]{background:var(--ink);color:var(--paper)}
+.stage{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(280px,1fr);gap:24px;align-items:start}
+.card{background:var(--paper);border-radius:28px;padding:18px;box-shadow:0 10px 30px rgba(43,15,28,.08)}
+svg.dg{display:block;width:100%;height:auto}
+.grp{fill:rgba(255,219,219,.55);stroke:var(--tint);stroke-dasharray:6 6;stroke-width:1.5}
+.gt{font:700 15px var(--f-body);letter-spacing:.12em;text-transform:uppercase;fill:var(--ink-soft)}
+.node{cursor:pointer;transition:opacity .25s}
+.node rect{stroke:var(--ink);stroke-width:1.6;transition:transform .2s}
+.node:hover rect,.node:focus rect{filter:drop-shadow(0 4px 0 var(--ink))}
+.node.sel rect{stroke-width:3.5;filter:drop-shadow(0 5px 0 var(--pink))}
+.node text{pointer-events:none;text-anchor:middle}
+.nt{font:700 14.5px var(--f-serif)}.nf{font:700 11.5px var(--f-body);letter-spacing:.05em;text-transform:uppercase}
+.edge path{fill:none;stroke:var(--ink);stroke-width:1.6;opacity:.35;transition:opacity .25s,stroke .25s}
+.edge.opt path{stroke-dasharray:5 5}
+.edge text{font:600 11.5px var(--f-body);fill:var(--ink-soft);text-anchor:middle;paint-order:stroke;stroke:var(--paper);stroke-width:5px;opacity:0;transition:opacity .25s}
+.edge.on path{opacity:1;stroke:var(--pink);stroke-width:2.6}
+.edge.on text{opacity:1;fill:var(--ink)}
+.dim{opacity:.2}
+.panel{position:sticky;top:24px;background:var(--paper);color:var(--ink);padding:44px 26px 24px;min-height:300px;border:2px solid var(--ink);border-radius:6px;box-shadow:6px 6px 0 var(--ink);transform:rotate(1deg)}
+.panel::before{content:"";position:absolute;top:-16px;left:50%;width:110px;height:32px;margin-left:-55px;transform:rotate(-3deg);background:repeating-linear-gradient(135deg,rgba(255,255,255,.2) 0 3px,transparent 3px 7px),#F5B4CC;clip-path:polygon(0 0,100% 0,96% 25%,100% 50%,96% 75%,100% 100%,0 100%,4% 75%,0 50%,4% 25%)}
+.panel h3{font-family:var(--f-display);font-weight:400;text-transform:uppercase;font-size:2.4rem;line-height:.95;margin:12px 0 6px}
+.tag{display:inline-block;padding:6px 12px;background:#EBC6DD;border-left:2px solid #C93C7D;font-family:var(--f-serif);font-size:.85rem}
+.file{font-family:var(--f-serif);font-style:italic;font-size:.95rem;color:var(--ink-soft)}
+.panel p{margin:14px 0;font-size:1.02rem}
+.links{font-size:.95rem;border-top:1.5px dashed var(--tint);padding-top:12px}
+.links div{margin-top:6px}.links b{font-family:var(--f-serif);font-weight:700}
+.ctl{display:flex;gap:10px;margin-top:18px;flex-wrap:wrap}
+.btn{border:2px solid var(--ink);border-radius:999px;padding:9px 18px;font:700 .95rem var(--f-body);cursor:pointer;background:var(--ink);color:var(--paper);transition:transform .2s,background .2s}
+.btn:hover{transform:translateY(-2px) rotate(-1deg);background:var(--pink);border-color:var(--pink)}.btn.alt{background:transparent;color:var(--ink)}.btn.alt:hover{background:var(--pastel);border-color:var(--ink)}
+.hint{font-weight:600;color:var(--ink-soft);margin:6px 0 0}
+.steps{counter-reset:s;list-style:none;margin:24px 0 0;padding:0;display:grid;gap:14px}
+.steps li{counter-increment:s;display:grid;grid-template-columns:64px 1fr;gap:16px;align-items:center;background:var(--paper);border-radius:22px;padding:16px 20px;cursor:pointer;transition:transform .2s,background .2s}
+.steps li:hover{transform:translateX(6px);background:#fff}
+.steps li::before{content:counter(s,decimal-leading-zero);font-family:var(--f-display);font-size:2.2rem;color:var(--pink)}
+.steps b{font-family:var(--f-serif)}
+footer{background:var(--ink);color:var(--paper);padding:28px 0;font-weight:700;letter-spacing:.06em;text-transform:uppercase}
+footer .wrap{display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px}
+footer a{color:var(--paper)}
+@media(max-width:860px){.stage{grid-template-columns:1fr}.panel{position:relative;top:0;margin-top:20px}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top"><a class="back" href="index.html">← Back to portfolio</a></div>
+  <header>
+    <span class="lbl">Cybersecurity and AI</span>
+    <h1>Aegis AI Threat Reporter</h1>
+    <p class="lead">A honeypot that pretends to be a vulnerable server and records what attackers try. Google Gemini then turns those logs into a short threat report.</p>
+    <ul class="pills"><li><span class="pill">Cowrie</span></li><li><span class="pill">Python</span></li><li><span class="pill">Gemini API</span></li><li><span class="pill">Docker</span></li><li><a class="pill" href="https://github.com/nethrakarthikkumar/Aegis-AI-Threat-Reporter" target="_blank" rel="noopener">See code!</a></li></ul>
+  </header>
+
+  <section>
+    <p class="eyebrow">The idea</p>
+    <h2>Let them in, watch closely</h2>
+    <p class="lead">Reading raw honeypot logs is slow. This project catches attacker activity safely, then lets an AI model summarise it so a person can understand it quickly.</p>
+    <div class="tapes">
+      <div class="tape"><b>1. Bait</b><span>A fake SSH and Telnet server looks like an easy target.</span></div>
+      <div class="tape"><b>2. Record</b><span>Every login attempt and command is saved as structured JSON.</span></div>
+      <div class="tape"><b>3. Explain</b><span>A Python batch job sends the logs to Gemini for a plain-language report.</span></div>
+    </div>
+  </section>
+
+  <section>
+    <p class="eyebrow">Architecture</p>
+    <h2>Explore the system</h2>
+    <p class="hint">Tap any box to see what it does. Filter by stage, or follow an attack step by step.</p>
+    <div class="chips" id="chips" role="group" aria-label="Filter by stage"></div>
+    <div class="stage">
+      <div class="card"><svg class="dg" id="dg" viewBox="0 0 900 1530" role="img" aria-label="Architecture diagram of the honeypot and AI reporting pipeline"></svg></div>
+      <aside class="panel" aria-live="polite" id="panel"></aside>
+    </div>
+  </section>
+
+  <section>
+    <p class="eyebrow">Walkthrough</p>
+    <h2>Follow one attack</h2>
+    <p class="hint">Tap a step to jump to it in the diagram.</p>
+    <ol class="steps" id="steps"></ol>
+  </section>
+</div>
+<footer><div class="wrap"><span>2026 Nethra Karthik</span><a href="index.html">Back to portfolio</a></div></footer>
+
+<script>
+const ST={rt:{n:'Cowrie runtime',c:'#FDC3D1'},dc:{n:'Decoy & backends',c:'#FDA8BF'},ev:{n:'Events & outputs',c:'#FFDBDB'},ai:{n:'AI reporting',c:'#FB8CAC'}};
+const N={
+docker:{x:340,y:40,w:220,s:'rt',t:'Deployment',f:'docker-compose.yml',d:'Docker packaging that starts the whole honeypot in one command, so it runs the same way anywhere.'},
+cfg:{x:110,y:150,w:230,s:'rt',t:'Honeypot config',f:'cowrie.cfg',d:'The settings file: which ports to open, how the fake machine presents itself and where logs go.'},
+launcher:{x:520,y:150,w:230,s:'rt',t:'Cowrie launcher',f:'cowrie.py',d:'The Python entry point that boots Cowrie and loads the service plugin.'},
+plugin:{x:300,y:260,w:260,s:'rt',t:'Twisted service plugin',f:'cowrie_plugin.py',d:'Cowrie is built on Twisted. This plugin wires the config into the event loop and starts the network listeners.'},
+ingress:{x:300,y:365,w:260,s:'rt',t:'SSH / Telnet listeners',f:'decoy ports',d:'The ports attackers find when they scan the internet. To them it looks like a real server with weak security.'},
+ssh:{x:90,y:465,w:260,s:'rt',t:'SSH protocol stack',f:'transport.py',d:'Handles the SSH handshake, accepts logins and runs the session, recording every credential tried.'},
+telnet:{x:550,y:465,w:260,s:'rt',t:'Telnet protocol stack',f:'transport.py',d:'The same idea for Telnet, an old unencrypted protocol that many botnets still target.'},
+pool:{x:30,y:650,w:230,s:'dc',t:'Isolated backend pool',f:'pool_server.py',d:'Optional mode: each attacker gets a throwaway virtual machine through libvirt for a more realistic target.'},
+shell:{x:340,y:650,w:230,s:'dc',t:'Emulated shell',f:'protocol.py',d:'The default backend. A fake shell that answers commands convincingly without ever touching a real system.'},
+proxy:{x:650,y:650,w:220,s:'dc',t:'Real-target proxy',f:'alternative backend',d:'Optional mode: forwards the attacker to a real machine you control, while still recording the session.'},
+honeyfs:{x:340,y:770,w:230,s:'dc',t:'Honey filesystem',f:'honeyfs.py',d:'Decoy files and command outputs, so listing folders or reading files shows believable fake content.'},
+artifact:{x:120,y:960,w:240,s:'ev',t:'Downloads & artifacts',f:'artifact.py',d:'Saves any file the attacker tries to download, such as malware, for later study.'},
+events:{x:540,y:960,w:240,s:'ev',t:'Event normalization',f:'events.py',d:'Turns logins, commands and connection events from every source into one consistent format.'},
+output:{x:330,y:1075,w:240,s:'ev',t:'Output router',f:'output.py',d:'Sends each record to every configured destination, so outputs can be added without touching the honeypot.'},
+json:{x:120,y:1185,w:240,s:'ev',t:'Cowrie JSON log',f:'cowrie.json',d:'A local file with one JSON event per line. It is the source of truth that the AI step reads.'},
+ext:{x:540,y:1185,w:260,s:'ev',t:'External adapters',f:'elasticsearch.py',d:'Optional plug-ins that ship events to search tools, queues or alerting systems.'},
+gem:{x:330,y:1335,w:240,s:'ai',t:'Gemini threat reporter',f:'batch Python consumer',d:'A batch script that reads the JSON log, sends it to Gemini and collects the written summary of what attackers tried.'},
+api:{x:330,y:1425,w:240,s:'ai',t:'Google Gemini API',f:'external AI API',d:'The external model that spots patterns and writes the short, readable threat report.'}};
+const E=[['docker','launcher','runs'],['cfg','plugin','configures',1],['launcher','plugin','loads'],['plugin','ingress','starts listeners'],['ingress','ssh','SSH'],['ingress','telnet','Telnet'],
+['ssh','pool','optional isolated mode',1],['ssh','shell','authenticated session'],['telnet','shell','session'],['ssh','proxy','optional proxy mode',1],['telnet','proxy','optional proxy mode',1],
+['shell','honeyfs','dispatches commands'],['shell','artifact','downloads'],['shell','events','activity telemetry'],['ssh','events','auth and lifecycle'],['telnet','events','lifecycle telemetry'],
+['artifact','output','artifact metadata'],['events','output','routes records'],['output','json','JSON output'],['output','ext','pluggable adapters'],['json','gem','batch reads'],['gem','api','submits logs']];
+const G=[['rt','Cowrie runtime',20,10,860,520],['dc','Decoy & backends',10,590,880,260],['ev','Events & outputs',90,900,720,370],['ai','AI reporting',300,1290,300,215]];
+const H=64,$=id=>document.getElementById(id),NS='http://www.w3.org/2000/svg';
+const el=(t,a={},p)=>{const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);p&&p.appendChild(e);return e};
+const dg=$('dg');let sel=null,flt='all';
+const gl=el('g',{},dg),eg=el('g',{},dg),ng=el('g',{},dg);
+G.forEach(([s,n,x,y,w,h])=>{el('rect',{x,y,width:w,height:h,rx:26,class:'grp','data-s':s},gl);el('text',{x:x+w/2,y:y+26,class:'gt','text-anchor':'middle'},gl).textContent=n});
+const ctr=(n,b)=>[n.x+n.w/2,n.y+(b?H:0)];
+const EL=E.map(([a,b,l,o])=>{const g=el('g',{class:'edge'+(o?' opt':'')},eg);const [x1,y1]=ctr(N[a],1),[x2,y2]=ctr(N[b],0),m=(y1+y2)/2;
+el('path',{d:`M${x1} ${y1}C${x1} ${m},${x2} ${m},${x2} ${y2}`},g);
+const tx=(x1+x2)/2,ty=(y1+y2)/2;el('text',{x:tx,y:ty+4},g).textContent=l;return{g,a,b}});
+Object.entries(N).forEach(([id,n])=>{const g=el('g',{class:'node',tabindex:0,role:'button','aria-label':n.t,'data-s':n.s},ng);const S=ST[n.s];
+el('rect',{x:n.x,y:n.y,width:n.w,height:H,rx:14,fill:S.c},g);
+const t=el('text',{x:n.x+n.w/2,y:n.y+28,class:'nt',fill:S.t||'#2B0F1C'},g);t.textContent=n.t;
+const f=el('text',{x:n.x+n.w/2,y:n.y+48,class:'nf',fill:S.t?'#FDA8BF':'#6B3A4D'},g);f.textContent=n.f;
+g.onclick=()=>pick(id);g.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();pick(id)}};n.g=g});
+function pick(id){sel=id;const n=N[id];
+Object.values(N).forEach(m=>m.g.classList.remove('sel'));n.g.classList.add('sel');
+EL.forEach(e=>e.g.classList.toggle('on',e.a===id||e.b===id));
+const ins=EL.filter(e=>e.b===id).map(e=>N[e.a].t),outs=EL.filter(e=>e.a===id).map(e=>N[e.b].t);
+$('panel').innerHTML=`<span class="tag">${ST[n.s].n}</span><h3>${n.t}</h3><div class="file">${n.f}</div><p>${n.d}</p><div class="links">${ins.length?`<div><b>Comes from:</b> ${ins.join(', ')}</div>`:''}${outs.length?`<div><b>Goes to:</b> ${outs.join(', ')}</div>`:''}</div>
+<div class="ctl"><button class="btn alt" id="pv">Previous</button><button class="btn" id="nx">Next step</button></div>`;
+const i=ORDER.indexOf(id);$('pv').onclick=()=>pick(ORDER[(i<0?0:i-1+ORDER.length)%ORDER.length]);$('nx').onclick=()=>pick(ORDER[(i+1)%ORDER.length]);}
+const ORDER=['docker','launcher','plugin','ingress','ssh','shell','honeyfs','events','output','json','gem','api'];
+function filter(s){flt=s;document.querySelectorAll('#chips .chip').forEach(c=>c.setAttribute('aria-pressed',c.dataset.s===s));
+document.querySelectorAll('.node,.grp').forEach(e=>e.classList.toggle('dim',s!=='all'&&e.dataset.s!==s));
+EL.forEach(e=>e.g.style.opacity=s==='all'||(N[e.a].s===s&&N[e.b].s===s)?1:.15)}
+[['all','All'],...Object.entries(ST).map(([k,v])=>[k,v.n])].forEach(([k,n])=>{const b=document.createElement('button');b.className='chip';b.dataset.s=k;b.textContent=n;b.onclick=()=>filter(k);$('chips').appendChild(b)});
+const STEPS=[['ingress','Attacker finds the open port','Scanners probe the internet for SSH and Telnet. The honeypot’s listeners look like an ordinary exposed server.'],['ssh','Login attempts are captured','Usernames and passwords are logged, and the attacker is let in.'],['shell','A fake shell responds','Commands run against an emulated shell instead of a real system.'],['honeyfs','Decoy files answer back','Fake files and outputs keep the attacker busy and revealing their habits.'],['events','Events are normalised','Everything is converted into one consistent record format.'],['json','Logs are written','The output router saves each event to the local JSON log.'],['gem','Gemini writes the report','A batch job sends the log to Gemini, which summarises the attack in plain language.']];
+STEPS.forEach(([id,t,d])=>{const li=document.createElement('li');li.innerHTML=`<div><b>${t}</b><div>${d}</div></div>`;li.onclick=()=>{pick(id);$('dg').scrollIntoView({block:'center'})};$('steps').appendChild(li)});
+filter('all');pick('ingress');
+</script>
+<script>
+/* "Back to portfolio" returns to where the visitor left (same scroll spot), not the top */
+(function(){
+  var ref=document.referrer, cameFromSite=false;
+  try{ cameFromSite = ref ? new URL(ref).origin===location.origin && /index\.html|\/$/.test(new URL(ref).pathname) : history.length>1; }catch(e){ cameFromSite = history.length>1; }
+  document.querySelectorAll('a[href="index.html"]').forEach(function(a){
+    a.addEventListener('click',function(e){
+      if(cameFromSite && history.length>1){ e.preventDefault(); history.back(); }
+    });
+  });
+})();
+</script>
+</body>
+</html>
