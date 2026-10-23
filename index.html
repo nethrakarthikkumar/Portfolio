@@ -8,7 +8,7 @@
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=DM+Mono:wght@400;500&family=Hanken+Grotesk:wght@400;500;600;700&family=Libre+Baskerville:wght@400;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Caveat:wght@700&family=DM+Mono:wght@400;500&family=Hanken+Grotesk:wght@400;500;600;700&family=Libre+Baskerville:wght@400;700&display=swap">
 <style>
 /* Layout concept: a sticky stage. A closed phone sits between the first and last name. Scrolling swings
    its left half open on a centre hinge like a book (3D), the two halves become one wide screen, which
@@ -159,6 +159,50 @@ a { color: inherit; }
 .fscreen .pane { left: 0; }
 .rscreen .pane { right: 0; }
 
+
+/* ---------- phone mode: landscape phone that opens bottom-up ---------- */
+.asm { transform: translate(var(--ax, 0px), var(--ay, 0px)); }
+.stage.v .flap {
+  left: calc(var(--pw) / -2); right: auto; top: auto; bottom: -1px; width: var(--pw); height: calc(var(--ph) + 1px);
+  transform-origin: 50% calc(100% - 1px); transform: rotateX(calc(var(--ang, 180deg) * -1)) translateZ(-1px);
+  padding: var(--bz) var(--bz) 0 var(--bz); border-right-width: var(--rimw, 2px); border-bottom-width: 0;
+  border-radius: var(--r) var(--r) 0 0;
+}
+.stage.v .rpan {
+  left: calc(var(--pw) / -2); top: 0; width: var(--pw); height: var(--ph);
+  padding: calc(var(--bz) * (1 - var(--o, 0))) var(--bz) var(--bz) var(--bz);
+  border-left-width: var(--rimw, 2px); border-top-width: calc(var(--rimw, 2px) * (1 - var(--o, 0)));
+  border-radius: calc(var(--r) * (1 - var(--o, 0))) calc(var(--r) * (1 - var(--o, 0))) var(--r) var(--r);
+}
+.stage.v .rpan::after, .stage.v .device::before { display: none; }
+.stage.v .fscreen { border-radius: calc(var(--r) - var(--bz) - var(--rimw, 2px)) calc(var(--r) - var(--bz) - var(--rimw, 2px)) 0 0; }
+.stage.v .rscreen {
+  border-radius:
+    calc((var(--r) - var(--bz) - var(--rimw, 2px)) * (1 - var(--o, 0)))
+    calc((var(--r) - var(--bz) - var(--rimw, 2px)) * (1 - var(--o, 0)))
+    calc(var(--r) - var(--bz) - var(--rimw, 2px))
+    calc(var(--r) - var(--bz) - var(--rimw, 2px));
+}
+.stage.v .fback {
+  transform: rotateX(180deg);
+  top: 0; bottom: calc(var(--rimw, 2px) * -1); left: calc(var(--rimw, 2px) * -1); right: calc(var(--rimw, 2px) * -1);
+  border-radius: calc(var(--r) * (1 - var(--o, 0))) calc(var(--r) * (1 - var(--o, 0))) var(--r) var(--r);
+}
+.stage.v .fback .lock {
+  inset: calc(var(--bz) * (1 - var(--o, 0))) var(--bz) var(--bz) var(--bz);
+  border-radius:
+    calc((var(--r) - var(--bz) - var(--rimw, 2px)) * (1 - var(--o, 0)))
+    calc((var(--r) - var(--bz) - var(--rimw, 2px)) * (1 - var(--o, 0)))
+    calc(var(--r) - var(--bz) - var(--rimw, 2px))
+    calc(var(--r) - var(--bz) - var(--rimw, 2px));
+}
+.stage.v .fback::after { background: linear-gradient(0deg, rgba(43, 15, 28, .35), rgba(43, 15, 28, 0) 80%); }
+.stage.v .shade { background: linear-gradient(180deg, rgba(43, 15, 28, .55), rgba(43, 15, 28, 0) 85%); }
+.stage.v .pane { left: 0; right: 0; width: auto; height: var(--sv); }
+.stage.v .fscreen .pane { top: 0; bottom: auto; }
+.stage.v .rscreen .pane { bottom: 0; top: auto; }
+.stage.v .names span { text-align: center; }
+
 /* the flat device (used once fully open, and while it grows to full screen) */
 .device {
   position: absolute; left: 50%; top: 50%; z-index: 3; transform: translate(-50%, -50%); visibility: hidden;
@@ -198,6 +242,15 @@ a { color: inherit; }
   .note b { font-size: 11px; }
     .l-sub { font-size: 11px; }
   .l-cue { font-size: 11px; padding: 8px 12px; }
+}
+
+/* landscape lock screen (closed phone in phone mode) */
+@container lock (min-aspect-ratio: 3/2) {
+  .l-photo { background-size: auto 100%; background-position: 94% 100%; }
+  .l-clock { left: 7cqw; right: auto; text-align: left; top: 9cqh; font-size: min(22cqw, 32cqh); }
+  .l-sub { left: 7cqw; right: auto; width: 44cqw; text-align: left; padding: 0; top: calc(9cqh + min(22cqw, 32cqh) + 3cqh); }
+  .l-notes { display: none; }
+  .l-dock { left: 7cqw; right: auto; justify-content: flex-start; bottom: 9cqh; }
 }
 
 /* ---------- hero (the open screen) ---------- */
@@ -278,6 +331,7 @@ h2 { margin: 0; font-family: var(--f-display); font-weight: 400; text-transform:
   .logo { font-size: 1.25rem; }
 }
 @media (max-width: 719px) { .top.solid .hnav { display: none; } }
+@media (max-width: 480px) { .band { padding-block: 56px; } .chip { padding: 10px 14px; font-size: .8rem; } .hrow > .proj { flex-basis: 90vw; width: 90vw; } }
 
 /* ---------- interactive layer ---------- */
 html.js .rv { opacity: 0; transform: translateY(32px); transition: opacity .8s cubic-bezier(.2,.7,.2,1), transform .8s cubic-bezier(.2,.7,.2,1); transition-delay: var(--d, 0s); }
@@ -495,6 +549,20 @@ a.pillc.alt:hover { background: #E2B2D1; }
   .hrow .pdev { width: min(100%, 200px); }
   .hrow .pbody { padding: 20px; gap: 12px; }
 }
+@media (max-width: 760px) {
+  .wash:not(.static) .wproj { padding: 92px 0 48px; box-sizing: border-box; }
+  .hrow .pbody { padding: 14px 16px; gap: 8px; }
+  .hrow .a2-text { gap: 8px; }
+  .hrow .proj h3 { font-size: clamp(1.5rem, 7vw, 1.9rem); }
+  .hrow .proj p { font-size: .85rem; line-height: 1.4; }
+  .hrow .tags { gap: 6px 8px; }
+  .hrow .tags li { font-size: .62rem; padding: 4px 9px; }
+  .hrow a.pillc, .hrow .pillc { font-size: .72rem; padding: 6px 12px; }
+  .hrow .flow { gap: 6px; padding-top: 2px; }
+  .hrow .tp { padding: 8px 10px; min-height: 52px; gap: 2px; }
+  .hrow .flow b { font-size: .7rem; }
+  .hrow .flow small { font-size: .62rem; }
+}
 @media (prefers-reduced-motion: reduce) { .wv svg { animation: none; } a.pillc { transition: none; } }
 
 /* ---------- open-to-work tape badge ---------- */
@@ -508,6 +576,38 @@ a.pillc.alt:hover { background: #E2B2D1; }
   .bulb { width: 8px; height: 8px; }
 }
 @media (prefers-reduced-motion: reduce) { .bulb { animation: none; } }
+
+/* ---------- mobile alignment fixes ---------- */
+@media (max-width: 860px) {
+  /* full-bleed bands without the 100vw trick (100vw includes the scrollbar and shifts the text) */
+  .roles { width: auto; margin-inline: calc(-1 * max(16px, env(safe-area-inset-left, 0px))); }
+  .role { padding-inline: max(28px, calc(env(safe-area-inset-left, 0px) + 12px)); gap: 14px; justify-items: start; }
+  .role .num { margin-bottom: 4px; }
+  .role p { max-width: none; }
+}
+@media (max-width: 760px) {
+  /* About: centre the heading and the portrait */
+  .about-grid > div:first-child { display: flex; flex-direction: column; align-items: center; text-align: center; }
+  .about-grid > div:first-child h2 { text-align: center; }
+  .about-grid .avatar { margin-inline: auto; width: min(100%, 300px); }
+  .about-grid p.lead { text-align: center; margin-inline: auto; }
+  .about-grid .stats { text-align: center; }
+  .about-grid > div { min-width: 0; }
+}
+
+/* ---------- "Scroll to unfold": plain text only ---------- */
+.l-cue { padding: 0; margin: 0; border-radius: 0; background: none; box-shadow: none; color: #fff; font-size: 17px; font-weight: 800; letter-spacing: .05em; text-shadow: 0 1px 3px rgba(43, 15, 28, .7), 0 2px 10px rgba(43, 15, 28, .6); pointer-events: none; }
+
+/* ---------- 01 / 02 / 03: tags as pink tape ribbons instead of paperclip pills ---------- */
+.role .tags { gap: 10px 12px; filter: drop-shadow(0 2px 0 rgba(43, 15, 28, .22)); }
+.role .tags li { border: 0; border-radius: 0; background: #FF82A9; color: var(--ink); padding: 9px 26px; font-weight: 700;
+  clip-path: polygon(0 0, 100% 0, calc(100% - 11px) 50%, 100% 100%, 0 100%, 11px 50%); }
+.role .tags li::before { content: none; display: none; }
+
+/* copy hint under the email chip: slanted, white, handwritten */
+.chips { align-items: flex-start; }
+.copywrap { position: relative; display: inline-block; margin-bottom: 38px; }
+.copywrap .hint { position: absolute; left: 16px; top: calc(100% + 12px); font-family: 'Caveat', 'Comic Sans MS', cursive; font-size: 1.6rem; font-weight: 700; line-height: 1; color: #fff; white-space: nowrap; transform: rotate(-5deg); transform-origin: left center; pointer-events: none; text-shadow: 0 1px 0 rgba(43, 15, 28, .15); }
 </style>
 </head>
 <body>
@@ -545,10 +645,6 @@ a.pillc.alt:hover { background: #E2B2D1; }
               <div class="l-clock clk">14:32</div>
               <div class="l-sub">Cyber security, UI/UX and hardware</div>
               <div class="l-notes">
-                <div class="note">
-                  <i style="background:linear-gradient(135deg,#FF5C89,#FB8CAC)"><svg viewBox="0 0 24 24"><path d="M12 2 4 5v6c0 5 3.4 9.4 8 11 4.6-1.6 8-6 8-11V5z"/></svg></i>
-                  <span><b>Safety Pendant is live</b><small>ESP32-C3 and 4G prototype</small></span>
-                </div>
                 <div class="note">
                   <i style="background:linear-gradient(135deg,#2B0F1C,#6B3A4D)"><svg viewBox="0 0 24 24"><path d="m12 2 2.2 6.8L21 11l-6.8 2.2L12 20l-2.2-6.8L3 11l6.8-2.2z"/></svg></i>
                   <span><b>Portfolio just launched</b><small>You are looking at it</small></span>
@@ -733,7 +829,7 @@ a.pillc.alt:hover { background: #E2B2D1; }
       <h2 class="rv">Say hello</h2>
       <p class="lead rv">From rough concept to finished product. Let’s make something amazing together.</p>
       <div class="chips rv">
-        <button class="chip mag" type="button" data-copy="nethraskk@gmail.com">nethraskk@gmail.com</button>
+        <span class="copywrap"><button class="chip mag" type="button" data-copy="nethraskk@gmail.com" aria-label="Copy email address nethraskk@gmail.com">nethraskk@gmail.com</button><span class="hint" aria-hidden="true">Click to copy!</span></span>
         <a class="chip mag" href="https://github.com/nethrakarthikkumar" target="_blank" rel="noopener">github.com/nethrakarthikkumar</a>
         <a class="chip mag" href="https://www.linkedin.com/in/nethrakarthikkumar" target="_blank" rel="noopener">linkedin.com/in/nethrakarthikkumar</a>
       </div>
@@ -755,7 +851,7 @@ a.pillc.alt:hover { background: #E2B2D1; }
   var lerp = function (a, b, t) { return a + (b - a) * t; };
   var ease = function (t) { return t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2; };
   var sm = function (x, a, b) { var t = clamp((x - a) / (b - a)); return t * t * (3 - 2 * t); };
-  var vw, vh, H, pw, nf, narrow, ticking = false;
+  var vw, vh, H, pw, nf, narrow, vert = false, ticking = false;
 
   // the two halves of the open screen show copies of the hero (visual only)
   var heroHTML = hero.innerHTML.replace(/ id="[^"]*"/g, '');
@@ -764,27 +860,31 @@ a.pillc.alt:hover { background: #E2B2D1; }
   });
 
   function sizes(isNarrow) {
-    H = Math.min(680, vh * (isNarrow ? 0.66 : 0.74));
-    pw = Math.min(H * 0.74, vw * 0.46);
+    H = Math.min(680, vh * (isNarrow ? 0.58 : 0.74));
+    pw = Math.min(H * 0.74, vw * (isNarrow ? 0.44 : 0.46));
   }
   function measure() {
     vw = stage.clientWidth; vh = stage.clientHeight;
     narrow = vw < 700;
-    sizes(narrow);
+    sizes(false);
     var probe = q('#probe'), k = 3.4;
     probe.textContent = 'Karthik'; var a1 = probe.getBoundingClientRect().width;
     probe.textContent = 'Nethra'; var a2 = probe.getBoundingClientRect().width;
     if (a1 > 0) k = Math.max(a1, a2) / 100;
     var avail = (vw - 2 * pw) / 2 - 28 - 24;
     nf = Math.min(110, avail / k, vh * 0.2);
-    if (!narrow && nf < 30) { narrow = true; sizes(true); }
-    names.classList.toggle('narrow', narrow);
-    if (narrow) {
-      nf = Math.max(20, Math.min(44, (vw - 40) / k, ((vh - H) / 2 - 70) / 0.95));
-      var line = nf * 0.95, topEdge = (vh - H) / 2, botEdge = (vh + H) / 2;
-      w1.style.top = (64 + Math.max(0, (topEdge - 64 - line)) / 2) + 'px';
-      w2.style.top = (botEdge + Math.max(0, (vh - botEdge - line)) / 2) + 'px';
-      w1.style.transform = w2.style.transform = '';
+    if (!narrow && nf < 30) narrow = true;
+    vert = narrow;
+    stage.classList.toggle('v', vert);
+    names.classList.toggle('narrow', vert);
+    if (vert) {
+      pw = Math.min(vw * 0.9, 560);
+      H = Math.min(pw * 0.6, vh * 0.38);
+      nf = Math.max(20, Math.min(150, (vw - 32) / k, ((vh - 2 * H) / 2 - 64 - 10) / 0.95));
+      var line = nf * 0.95;
+      w1.style.top = ((vh - H) / 2 - line - 14) + 'px';
+      w2.style.top = ((vh + H) / 2 + 14) + 'px';
+      stage.style.setProperty('--sv', (2 * (H - BZ - RIM)) + 'px');
     } else {
       w1.style.top = w2.style.top = '';
     }
@@ -809,7 +909,8 @@ a.pillc.alt:hover { background: #E2B2D1; }
 
     if (!flatMode) {
       stage.style.setProperty('--ang', (180 * (1 - e)) + 'deg');
-      stage.style.setProperty('--ax', (-(pw / 2) * (1 - e)) + 'px');
+      stage.style.setProperty('--ax', (vert ? 0 : -(pw / 2) * (1 - e)) + 'px');
+      stage.style.setProperty('--ay', (vert ? -(H / 2) * (1 - e) : 0) + 'px');
       stage.style.setProperty('--o', clamp((e - 0.012) / 0.06));
       stage.style.setProperty('--bz', BZ + 'px');
       stage.style.setProperty('--r', lerp(50, 30, e) + 'px');
@@ -819,9 +920,9 @@ a.pillc.alt:hover { background: #E2B2D1; }
       scene.style.visibility = 'visible';
       dev.style.visibility = 'hidden';
       hero.style.opacity = 0; hero.style.visibility = 'hidden';
-      fw = lerp(pw, 2 * pw, e) * 0.86; fh = H;
+      fw = (vert ? pw : lerp(pw, 2 * pw, e)) * 0.86; fh = vert ? lerp(H, 2 * H, e) : H;
     } else {
-      var W = lerp(2 * pw, vw, s2), Hh = lerp(H, vh, s2);
+      var W = lerp(vert ? pw : 2 * pw, vw, s2), Hh = lerp(vert ? 2 * H : H, vh, s2);
       dev.style.width = W + 'px'; dev.style.height = Hh + 'px';
       stage.style.setProperty('--bz', lerp(BZ, 0, s2) + 'px');
       stage.style.setProperty('--r', lerp(30, 0, s2) + 'px');
@@ -840,7 +941,11 @@ a.pillc.alt:hover { background: #E2B2D1; }
 
     var nOp = 1 - sm(s2, 0, 0.35);
     names.style.opacity = nOp;
-    if (!narrow) {
+    if (vert) {
+      var sv = flatMode ? H / 2 : (H / 2) * e;
+      w1.style.transform = 'translateY(' + (-sv) + 'px)';
+      w2.style.transform = 'translateY(' + sv + 'px)';
+    } else {
       var sh = flatMode ? pw / 2 : (pw / 2) * e;
       w1.style.transform = 'translateX(' + (-sh) + 'px)';
       w2.style.transform = 'translateX(' + sh + 'px)';
@@ -939,6 +1044,15 @@ a.pillc.alt:hover { background: #E2B2D1; }
     else {
       var wstage = $('#wstage'), wtrack = $('#wtrack'), wword = $('#wword'), wvf = $('#wvf'), wvb = $('#wvb');
       var wprojEl = $('#wproj'), wrow = $('#hrow'), wfill = $('#wfill'), wcnt = $('#wcount');
+      function fitCards() {
+        var cards = [].slice.call(document.querySelectorAll('.hrow > .proj'));
+        cards.forEach(function (c) { c.style.scale = ''; });
+        if (window.innerWidth > 760) return;
+        var avail = window.innerHeight - 92 - 52;
+        cards.forEach(function (c) { var h = c.offsetHeight; if (h > avail) c.style.scale = (avail / h).toFixed(3); });
+      }
+      fitCards(); window.addEventListener('resize', fitCards); window.addEventListener('load', fitCards);
+      if (document.fonts && document.fonts.ready) document.fonts.ready.then(fitCards);
       var wswap = null, wtick = false;
       var wclamp = function (x) { return Math.min(1, Math.max(0, x)); };
       var wsm = function (x, a, b) { var k = wclamp((x - a) / (b - a)); return k * k * (3 - 2 * k); };
